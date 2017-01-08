@@ -3,10 +3,11 @@
 ## Preparations
 
 I will be using:
-- Ruby 2.4.0
-- Rails 5 with APIkey enabled
-- ActiveAdmin
+    - Ruby 2.4.0
+    - Rails 5 with APIkey enabled
+    - ActiveAdmin
 
+Preparing application:
 
 1. Create a folder for application:
     ```Bash
