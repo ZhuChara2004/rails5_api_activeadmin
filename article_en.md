@@ -44,6 +44,21 @@ Preparing application:
     [<img src="/public/img/5.png" alt="Gitignore" height=150 width=100 />](/public/img/5.png)
     [<img src="/public/img/6.png" alt="Initial commit" height=150 width=100 />](/public/img/6.png)
     
-
+6. Now launch a server and check if it's working (I am launching it on port 3080, but the default is 3000)
+    ```
+    rails s -p 3080
+    ```
+    
+    [<img src="/public/img/7.png" alt="Default rails root" height=150 width=100 />](/public/img/7.png)
     
 
+## Models
+This application will be used as a service for ordering food from local restaurants. So we need to have a few database models:
+ - Dish (title, type, components, description, price)
+ - Restaurant (title, description)
+ 
+ 
+1. Scaffolding restaurant model
+    ```
+    
+    ```
