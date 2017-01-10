@@ -99,7 +99,7 @@ This application will be used as a service for ordering food from local restaura
     as an integer starting with `0` where each next number will correspond to a dish type. 
     For example: `0 for european`, `1 for pan asian`, `2 for wok` etc.
     
-2. Migrating Database and creating test data
+2. Migrating Database, configuring controllers and creating test data
 
     Now I have to migrate the database and create dummy data
     ```Bash
@@ -156,6 +156,68 @@ This application will be used as a service for ordering food from local restaura
     
     [<img src="/public/img/17.png" alt="Updated JSON" height=150 width=100 />](/public/img/17.png)
 
+
+3. Setting up ActiveAdmin
+
+    First of all I need to add required gems to Gemfile
+    
+    ```Ruby
+    gem 'inherited_resources', github: 'activeadmin/inherited_resources'
+    gem 'activeadmin', '~> 1.0.0.pre4'
+    gem 'ransack',    github: 'activerecord-hackery/ransack'
+    gem 'kaminari',   github: 'amatsuda/kaminari', branch: '0-17-stable'
+    gem 'formtastic', github: 'justinfrench/formtastic'
+    gem 'draper',     github: 'audionerd/draper', branch: 'rails5', ref: 'e816e0e587'
+    gem 'activemodel-serializers-xml', github: 'rails/activemodel-serializers-xml'
+    
+    gem 'jquery-ui-rails', '~> 5.0.4'
+    ```
+    
+    And install them
+    
+    ```Bash
+    bundle install
+    ```
+    
+    After that we have to update `app/controllers/application_controller` from
+    
+    ```Ruby
+    class ApplicationController < ActionController::API
+    end
+    ```
+    
+    to 
+    
+    ```Ruby
+    class ApplicationController < ActionController::Base
+    end
+    ```
+    
+    And `config/application.rb`
+    
+    ```Ruby
+    module NewApiApp
+      class Application < Rails::Application
+        # ...
+        config.middleware.use ActionDispatch::Flash
+        config.middleware.use Rack::MethodOverride
+        config.middleware.use ActionDispatch::Cookies
+      end
+    end
+    ```
+    
+    [<img src="/public/img/18.png" alt="ActiveAdmin configuration" height=150 width=100 />](/public/img/18.png)
+    
+    Now I will install ActiveAdmin. I won't be using any authentication, so I skip them.
+    
+    ```Bash
+    rails g active_admin:install --skip-users
+    rails db:migrate 
+    ```
+    
+    When I visit `http://localhost:3080/admin` I see ActiveAdmin dashboard
+    
+    [<img src="/public/img/19.png" alt="ActiveAdmin dashboard" height=150 width=100 />](/public/img/19.png)
     
     
     [<img src="/public/img/.png" alt="" height=150 width=100 />](/public/img/.png)
