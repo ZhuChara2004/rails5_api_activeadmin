@@ -303,5 +303,13 @@ This application will be used as a service for ordering food from local restaura
     [<img src="/public/img/22.png" alt="New items" height=150 width=100 />](/public/img/22.png)
  
  
+##Conclusions 
+
+ActiveAdmin can be used if you need to implement backend for your database. It is flexible, customizable and can be easily 
+integrated.
+
+##Alternatives
+[Rails Admin](https://github.com/sferik/rails_admin)
+[Typus](https://github.com/typus/typus)
+[Active Scaffold](https://github.com/activescaffold/active_scaffold)
  
-    [<img src="/public/img/.png" alt="" height=150 width=100 />](/public/img/.png)
