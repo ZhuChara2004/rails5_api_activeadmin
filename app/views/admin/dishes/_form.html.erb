@@ -1,0 +1,12 @@
+<%= semantic_form_for [:admin, @dish], builder: Formtastic::FormBuilder do |f| %>
+    <%= f.semantic_errors %>
+    <%= f.inputs do %>
+        <%= f.input :restaurant_id, as: :select, collection: Hash[Restaurant.all.collect{|r| [r.title, r.id]}], include_blank: false  %>
+        <%= f.input :title %>
+        <%= f.input :dish_type, as: :select, collection: Dish.dish_types.keys, include_blank: false %>
+        <%= f.input :description %>
+        <%= f.input :ingredients %>
+        <%= f.input :price %>
+    <% end %>
+    <%= f.actions %>
+<% end %>

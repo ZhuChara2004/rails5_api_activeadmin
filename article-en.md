@@ -219,5 +219,89 @@ This application will be used as a service for ordering food from local restaura
     
     [<img src="/public/img/19.png" alt="ActiveAdmin dashboard" height=150 width=100 />](/public/img/19.png)
     
+
+4. Creating and configuring ActiveAdmin resources
+
+    Now I have to generate ActiveAdmin resources:
     
+    ```Bash
+    rails g active_admin:resource Restaurant
+    rails g active_admin:resource Dish
+    ```
+    
+    It will add sections to create, list, update and delete dishes, but default views and forms don't satisfy my needs, 
+    so I will update them.
+    
+    First of all I will update `app/admin/restaurant.rb`, so it shows restaurant dishes count on index page and dishes 
+    list on show page. And also I tell ActiveAdmin, which parameters can be changed:
+    
+    ```Ruby
+    ActiveAdmin.register Restaurant do
+      index do
+        column :title
+        column :description
+        column :dishes_count do |product|
+          product.dishes.count
+        end
+        actions
+      end
+    
+      show do |restaurant|
+    
+        attributes_table do
+          row :title
+          row :description
+        end
+    
+        panel 'Dishes' do
+          table_for restaurant.dishes do |t|
+            t.column :title
+            t.column :dish_type
+            t.column :ingredients
+            t.column :description
+            t.column :price
+          end
+        end
+      end
+    
+      permit_params :title, :description
+    end
+    ```
+    
+    After that, I will update dish edit form so I can choose dish type from list. To do that, I have to create form partial
+    at `app/views/admin/dishes/_form.html.erb`:
+    
+    ```ERB
+    <%= semantic_form_for [:admin, @dish], builder: Formtastic::FormBuilder do |f| %>
+        <%= f.semantic_errors %>
+        <%= f.inputs do %>
+            <%= f.input :restaurant_id, as: :select, collection: Hash[Restaurant.all.collect{|r| [r.title, r.id]}], include_blank: false  %>
+            <%= f.input :title %>
+            <%= f.input :dish_type, as: :select, collection: Dish.dish_types.keys, include_blank: false %>
+            <%= f.input :description %>
+            <%= f.input :ingredients %>
+            <%= f.input :price %>
+        <% end %>
+        <%= f.actions %>
+    <% end %>
+    ```
+    
+    And render it from `app/admin/dish.rb`:
+    
+    ```Ruby
+    ActiveAdmin.register Dish do
+      form partial: 'form'
+    
+      permit_params :restaurant_id, :title, :dish_type, :description, :ingredients, :price
+    end
+    ```
+    
+    Now I can create, read, update and destroy restaurants and dishes from application backend. 
+    
+    [<img src="/public/img/20.png" alt="ActiveAdmin resources config" height=150 width=100 />](/public/img/20.png)
+    [<img src="/public/img/21.png" alt="Form partial" height=150 width=100 />](/public/img/21.png)
+    [<img src="/public/img/22.png" alt="New items" height=150 width=100 />](/public/img/22.png)
+ 
+ 
+ 
     [<img src="/public/img/.png" alt="" height=150 width=100 />](/public/img/.png)
