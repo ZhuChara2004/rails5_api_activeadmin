@@ -1,17 +1,17 @@
-# Using ActiveAdmin as a backend in Rails 5 application
+# Використання ActiveAdmin в якості бекенду додатків, написаних на Rails 5
 
-## Preparations
+## Підготовка
 
-I will be using:
+Я буду використовувати:
 - Ruby 2.4.0
-- Rails 5 with API key enabled
+- Rails 5 з включеним ключем API
 - SQLite
 - ActiveAdmin
 
 
-Preparing application:
+Підготовка додатку:
 
-1. Create a folder for application:
+1. Створення каталогу для додатку:
     ```Bash
     mkdir rails5_api_activeadmin 
     cd rails5_api_activeadmin
@@ -19,7 +19,7 @@ Preparing application:
 
     [<img src="/public/img/1.png" alt="Creating folder" height=150 width=100 />](/public/img/1.png)
 
-2. Create Gemset for application and install rails gem
+2. Створення гемсету і встановлення гему rails
     ```Bash
     rvm use 2.4.0@rails5_api_activeadmin --ruby-version --create
     gem install rails
@@ -27,7 +27,7 @@ Preparing application:
     
     [<img src="/public/img/2.png" alt="Gemset created" height=150 width=100 />](/public/img/2.png)
     
-3. Initialize a new git repository and generate a blank Rails 5 application
+3. Ініціалізація репозиторію і генерація нового додатку Rails
     ```Bash
     git init 
     rails new . --api
@@ -35,16 +35,16 @@ Preparing application:
     
     [<img src="/public/img/3.png" alt="Git and Rails" height=150 width=100 />](/public/img/3.png)
     
-4. Rails installed
+4. Встановлення Rails
 
     [<img src="/public/img/4.png" alt="Rails installed" height=150 width=100 />](/public/img/4.png)
     
-5. Adding IDE settings folder to .gitignore and committing changes
+5. Додавання файлів IDE до .gitignore базовий соміт
 
     [<img src="/public/img/5.png" alt="Gitignore" height=150 width=100 />](/public/img/5.png)
     [<img src="/public/img/6.png" alt="Initial commit" height=150 width=100 />](/public/img/6.png)
     
-6. Now launch a server and check if it's working (I am launching it on port 3080, but the default is 3000)
+6. Запуск серверу з метою перевірки роботи додатку (я запускаю на порту 3080, але порт за замовчуванням - 3000)
     ```
     rails s -p 3080
     ```
@@ -53,16 +53,17 @@ Preparing application:
     
 
 ## Database Models
-This application will be used as a service for ordering food from local restaurants. So we need to have a few database models:
+Цей додаток буде використовуватись як сервіс замовлення їжі з місцевих ресторанів. Тому нам необхадно створити кілька 
+моделей баз даних:
  - Dish (title, type, ingredients, description, price)
  - Restaurant (title, description)
  
  
-1. Scaffolding restaurant model
+1. Створення моделі ресторан
 
-    I will use built in Rails scaffold generator and define fields, that have to be created at a database, providing field type.
-    The default type is string, so it can be skipped. The model Dish will belong to model Restaurant and Restaurant 
-    can have many dishes. Also, I will use Enumerable on a dish type field.
+    Я буду використовувати вбудований в Rails генератор scaffold. Для цього, мені потрібно вказати поля, які я створюю для 
+    моделі, а також їх тип. Тип за замовчуванням - string, тому його можна пропустити. Модель Dish належить моделі Restaurant,
+    а Restaurant може мати багато страв. Крім того, я буду викорістовувати enumerable для типу страви.
     
     ```
     rails g scaffold Restaurant title description
@@ -71,13 +72,14 @@ This application will be used as a service for ordering food from local restaura
     
     [<img src="/public/img/8.png" alt="Models generated" height=150 width=100 />](/public/img/8.png)
     
-    We can ignore warnings in this case (rails code is not updated to the changes in Ruby 2.4.0).
+    В даному випадку я ігнорую попередження (код рельсів не оновлений до змін в Ruby 2.4.0).
     
-    And I used rails trick to tell, that model dish belongs to model Restaurant.
+    Крім того, під час генерування моделі Dish я викорстаю вбудований в генератор спосіб вказання на те, що ця модель 
+    належить моделі Restaurant
     
     [<img src="/public/img/9.png" alt="Generated models code" height=150 width=100 />](/public/img/9.png)
     
-    Now I have to tell that Restaurant have many dishes and set dishes type.
+    Тепер я повинен вказати, що модель Restaurant може мати багато об'єктів моделі Dish, а також вказати типи страв.
     
     ```Ruby
     class Restaurant < ApplicationRecord
@@ -91,17 +93,15 @@ This application will be used as a service for ordering food from local restaura
       enum type: [:european, :pan_asian, :wok, :non_alcohol_drink, :alcohol_drink]
     end
     ```
-    
     [<img src="/public/img/10.png" alt="Models code" height=150 width=100 />](/public/img/10.png)
     
+    Enum автоматично згенерує методи для типів страви і ці методи будуть доспні в додатку. А сам тип буде збережений в 
+    базі як integer, що починається з `0` де кожне наступне число відповідає типу страви. 
+    Наприклад: `0 - european`, `1 - pan asian`, `2 - wok` і т.д.
     
-    Enum will provide our application with automatically generated methods for dish type. And it will be saved in database
-    as an integer starting with `0` where each next number will correspond to a dish type. 
-    For example: `0 for european`, `1 for pan asian`, `2 for wok` etc.
-    
-2. Migrating Database, configuring controllers and creating test data
+2. Міграція бази, налаштування контролерів та створення тестових даних
 
-    Now I have to migrate the database and create dummy data
+    Тепер мені потрібно мігрувати базу і створити тестові дані
     ```Bash
     rails db:migrate
     rails c
@@ -119,14 +119,14 @@ This application will be used as a service for ordering food from local restaura
     [<img src="/public/img/12.png" alt="Creating Restaurant" height=150 width=100 />](/public/img/12.png)
     [<img src="/public/img/13.png" alt="Creating dish" height=150 width=100 />](/public/img/13.png)
     
-    Now if I visit `http://localhost:3080/restaurants` or `http://localhost:3080/dishes`, I will see data, stored in DB, 
-    in JSON format
+    Якщо я перейду за посиланням `http://localhost:3080/restaurants` або `http://localhost:3080/dishes`, я побачу дані,
+    збережені у базі у форматі JSON
     
     [<img src="/public/img/14.png" alt="Restaurants" height=150 width=100 />](/public/img/14.png)
     [<img src="/public/img/15.png" alt="Dishes" height=150 width=100 />](/public/img/15.png)
     
-    But I want to see all dishes, that restaurant have on its page and restaurant name on a dishes page, so I have to make 
-    some changes to corresponding controllers.
+    Але я хочу побачити всі страви, які є в ресторані на сторінці цього ресторану, а також назву ресторану на сторінці 
+    страви, тому мені потрібно внести зміни у відповідні контролери
     
     ```Ruby
     class RestaurantsController < ApplicationController
@@ -152,14 +152,14 @@ This application will be used as a service for ordering food from local restaura
     
     [<img src="/public/img/16.png" alt="Updated controllers code" height=150 width=100 />](/public/img/16.png)
     
-    And I see updated info in JSON
+    І я можу побачити, цо інфорсмація в JSON оновилась
     
     [<img src="/public/img/17.png" alt="Updated JSON" height=150 width=100 />](/public/img/17.png)
 
 
-3. Setting up ActiveAdmin
+3. Підключення ActiveAdmin
 
-    First of all I need to add required gems to Gemfile
+    Перш за все, меня потрібно додати необхідні геми в Gemfile
     
     ```Ruby
     gem 'inherited_resources', github: 'activeadmin/inherited_resources'
@@ -173,27 +173,27 @@ This application will be used as a service for ordering food from local restaura
     gem 'jquery-ui-rails', '~> 5.0.4'
     ```
     
-    And install them
+    І встановити їх
     
     ```Bash
     bundle install
     ```
     
-    After that we have to update `app/controllers/application_controller` from
+    Після цього потрібно внести зміни в `app/controllers/application_controller` з
     
     ```Ruby
     class ApplicationController < ActionController::API
     end
     ```
     
-    to 
+    на 
     
     ```Ruby
     class ApplicationController < ActionController::Base
     end
     ```
     
-    And `config/application.rb`
+    І додати зміни в `config/application.rb`
     
     ```Ruby
     module NewApiApp
@@ -208,32 +208,32 @@ This application will be used as a service for ordering food from local restaura
     
     [<img src="/public/img/18.png" alt="ActiveAdmin configuration" height=150 width=100 />](/public/img/18.png)
     
-    Now I will install ActiveAdmin. I won't be using any authentication, so I skip them.
+    Тепер я встановлю ActiveAdmin. Я не буду використовувати аутентифікацію, тому я її пропускаю.
     
     ```Bash
     rails g active_admin:install --skip-users
     rails db:migrate 
     ```
     
-    When I visit `http://localhost:3080/admin` I see ActiveAdmin dashboard
+    Коли я заходжу на `http://localhost:3080/admin`, я можу побачити дашборд ActiveAdmin
     
     [<img src="/public/img/19.png" alt="ActiveAdmin dashboard" height=150 width=100 />](/public/img/19.png)
     
 
-4. Creating and configuring ActiveAdmin resources
+4. Створення і налаштування ресурсів ActiveAdmin
 
-    Now I have to generate ActiveAdmin resources:
+    Тепер мені потрібно згенерувати ресурси ActiveAdmin:
     
     ```Bash
     rails g active_admin:resource Restaurant
     rails g active_admin:resource Dish
     ```
     
-    It will add sections to create, list, update and delete dishes, but default views and forms don't satisfy my needs, 
-    so I will update them.
+    Це додасть розділи для створення, перегляду, оновлення і видалення страв і ресторанів, але мене не влаштовує результат,
+    створений за замовчуванням, тому мені потрібно внести свої зміни.
     
-    First of all I will update `app/admin/restaurant.rb`, so it shows restaurant dishes count on index page and dishes 
-    list on show page. And also I tell ActiveAdmin, which parameters can be changed:
+    Перш за все, мені необхідно оновити `app/admin/restaurant.rb`, щоб я бачив кількість страв в ресторані у списку 
+    ресторанів і список страв на сторінці ресторану. Крім того, я вказую, які поля можуть бути змінені.
     
     ```Ruby
     ActiveAdmin.register Restaurant do
@@ -268,8 +268,8 @@ This application will be used as a service for ordering food from local restaura
     end
     ```
     
-    After that, I will update dish edit form so I can choose dish type from list. To do that, I have to create form partial
-    at `app/views/admin/dishes/_form.html.erb`:
+    Після йього, я оновлю форму редагування страви, щоб я міг обирати тип страви і ресторан із випадаючого списку. Для
+    йього? мені потрібно створити паршиал в `app/views/admin/dishes/_form.html.erb`:
     
     ```ERB
     <%= semantic_form_for [:admin, @dish], builder: Formtastic::FormBuilder do |f| %>
@@ -286,7 +286,7 @@ This application will be used as a service for ordering food from local restaura
     <% end %>
     ```
     
-    And render it from `app/admin/dish.rb`:
+    І відрендерити його в `app/admin/dish.rb`:
     
     ```Ruby
     ActiveAdmin.register Dish do
@@ -296,19 +296,19 @@ This application will be used as a service for ordering food from local restaura
     end
     ```
     
-    Now I can create, read, update and destroy restaurants and dishes from application backend. 
+    Тепер я можу створювати, читати, редагувати і видаляти ресторани і страви за допомогою бекенду.
     
     [<img src="/public/img/20.png" alt="ActiveAdmin resources config" height=150 width=100 />](/public/img/20.png)
     [<img src="/public/img/21.png" alt="Form partial" height=150 width=100 />](/public/img/21.png)
     [<img src="/public/img/22.png" alt="New items" height=150 width=100 />](/public/img/22.png)
  
  
-## Conclusions 
+## Висновки 
 
-ActiveAdmin can be used if you need to implement backend for your database. It is flexible, customizable and can be easily 
-integrated.
+ActiveAdmin можна використовувати, якщо необхідно реалізувати бекенд для БД. Він гнучкий, легко налаштовується і просто
+інтегрується.
 
-## Alternatives
+## Альтернативи
 [Rails Admin](https://github.com/sferik/rails_admin)
 [Typus](https://github.com/typus/typus)
 [Active Scaffold](https://github.com/activescaffold/active_scaffold)
