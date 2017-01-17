@@ -1,5 +1,9 @@
 # Використання ActiveAdmin в якості бекенду додатків, написаних на Rails 5
 
+Оригінал запису можна прочитати [тут](https://masterofcode.com/blog/using-activeadmin-backend-rails-5-application)
+
+[GitHub репозиторій](https://github.com/ZhuChara2004/rails5_api_activeadmin)
+
 ## Підготовка
 
 Я буду використовувати:
